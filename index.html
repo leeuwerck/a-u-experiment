@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ayoub’s Experiment</title>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <dialog id="start_dialog" open>
+      <form method="dialog" onsubmit="startExperiment()">
+        <label for="subject_id">Subject ID:</label>
+        <input
+          type="text"
+          id="subject_id"
+          name="subject_id"
+          autocomplete="off"
+          autofocus
+          oninput="(() => { document.getElementById('start_button').disabled = !document.getElementById('subject_id').value;})()"
+        />
+        <p>Commencer l’expérience&nbsp;?</p>
+        <button id="start_button" disabled>Start</button>
+      </form>
+    </dialog>
+
+    <dialog id="continue_dialog">
+      <form method="dialog" onsubmit="startNextExperimentStep()">
+        <p>Commencer la seconde partie&nbsp;?</p>
+        <button autofocus>Commencer</button>
+      </form>
+    </dialog>
+    <dialog id="finish_dialog">
+      <form method="dialog" onsubmit="displayResults()">
+        <p>Finir l’expérience&nbsp;?</p>
+        <button autofocus>Finir</button>
+      </form>
+    </dialog>
+    <div id="stimulus_container">
+      <svg id="dots_circle" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div id="color_choices">
+        <svg
+          id="left_circle_choice"
+          onclick="clickColor(this)"
+          viewBox="0 0 1000 1000"
+          xmlns="http://www.w3.org/2000/svg"
+        ></svg>
+        <svg
+          id="right_circle_choice"
+          onclick="clickColor(this)"
+          viewBox="0 0 1000 1000"
+          xmlns="http://www.w3.org/2000/svg"
+        ></svg>
+      </div>
+      <div id="tips">
+        <span id="left_tip">↑</span>
+        <span id="right_tip">↑</span>
+      </div>
+      <p id="tip_explanation">Ce conseil n’est peut-être pas vrai.</p>
+      <span id="likert">
+        <p>Pas sûr·e du tout</p>
+        <fieldset>
+          <input name="confidenceLevel" type="radio" value="1" />
+          <input name="confidenceLevel" type="radio" value="2" />
+          <input name="confidenceLevel" type="radio" value="3" id="mean_likert_value" />
+          <input name="confidenceLevel" type="radio" value="4" />
+          <input name="confidenceLevel" type="radio" value="5" />
+        </fieldset>
+        <p>Tout à fait sûr·e</p>
+      </span>
+    </div>
+    <div id="results_container">
+      <textarea id="responses" rows="10" cols="80"></textarea>
+    </div>
+    <script type="text/javascript" src="lodash.js"></script>
+    <script defer type="text/javascript" src="script.js"></script>
+  </body>
+</html>
