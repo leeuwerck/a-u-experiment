@@ -1,4 +1,4 @@
-const { includes, get, last, random, repeat, sampleSize, shuffle, snakeCase, some } = _
+const { includes, get, last, random, repeat, sampleSize, set, shuffle, snakeCase, some } = _
 
 const RED = { colorName: "red", rgb: "rgb(255, 0, 0, 0.2)" }
 const BLUE = { colorName: "blue", rgb: "rgb(0, 0, 255, 0.2)" }
@@ -8,7 +8,7 @@ const ORANGE = { colorName: "orange", rgb: "rgb(255, 165, 0, 0.2)" }
 const PURPLE = { colorName: "purple", rgb: "rgb(128, 0, 128, 0.2)" }
 const SKY_BLUE = { colorName: "skyblue", rgb: "rgb(135, 206, 235, 0.2)" }
 const GREY = { colorName: "grey", rgb: "rgb(128, 128, 128, 0.2)" }
-const colors = [RED, BLUE, BRIGHT_GREEN, YELLOW, ORANGE, PURPLE, SKY_BLUE, GREY]
+let colors = [RED, BLUE, BRIGHT_GREEN, YELLOW, ORANGE, PURPLE, SKY_BLUE, GREY]
 const shuffledAccuracyTips = shuffle([
   true,
   true,
@@ -309,6 +309,13 @@ const rightTip = document.getElementById("right_tip")
 const leftCircleOfPair = document.getElementById("left_circle_choice")
 const rightCircleOfPair = document.getElementById("right_circle_choice")
 
+if (isTrial) {
+  document.getElementById("opacity_level_label").style.display = "block"
+  document.getElementById("opacity_level_label").style.visibility = "visible"
+  document.getElementById("opacity_level_input").style.display = "block"
+  document.getElementById("opacity_level_input").style.visibility = "visible"
+}
+
 const getRandomCoordinates = () => [random(0, SCREEN_SIZE), random(0, SCREEN_SIZE)]
 
 const getDistance = (x1, y1, x2, y2) => Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
@@ -431,6 +438,10 @@ function startExperiment() {
       /* IE11 */
       elem.msRequestFullscreen()
     }
+  }
+  if (document.getElementById("opacity_level_input").value != "") {
+    const opacity = document.getElementById("opacity_level_input").value
+    colors = colors.map((color) => set(color, "rgb", color.rgb.replace("0.2", `0.${opacity}`)))
   }
 
   startNextStaircaseStep()

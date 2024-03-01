@@ -120,7 +120,9 @@ form {
 
 #dots_circle,
 #color_choices,
-#results_container {
+#results_container,
+#opacity_level_label,
+#opacity_level_input {
   display: none;
   visibility: hidden;
 }
