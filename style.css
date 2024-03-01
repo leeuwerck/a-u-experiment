@@ -80,6 +80,7 @@ form {
   /* changed to flex in script */
   & span {
     visibility: hidden;
+    font-size: 1.5em;
   }
   justify-content: space-around;
   top: 62%;
@@ -95,6 +96,7 @@ form {
   width: var(--stimulus-container-size);
   text-align: center;
   animation: var(--choice-animation);
+  font-size: 1.5em;
 }
 
 .shadow:active,
