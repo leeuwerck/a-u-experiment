@@ -623,6 +623,8 @@ function displayResults() {
   document.exitFullscreen()
   // document.exitPointerLock()
 
+  document.getElementById("stimulus_container").style.display = "none"
+
   subjectId = document.getElementsByName("subject_id")[0].value || "missing_subject_id"
 
   const responsesToDownload = formatResponses(subjectId)
@@ -638,8 +640,8 @@ function displayResults() {
   downloadElement.setAttribute("href", "data:attachment/csv" + "," + encodeURI(responsesToDownload))
 
   downloadElement.setAttribute("download", "responses_" + subjectId + ".csv")
+  downloadElement.textContent = "Download results .csv"
 
-  downloadElement.style.display = "none"
   document.body.appendChild(downloadElement)
 
   setTimeout(() => {

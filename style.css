@@ -117,7 +117,13 @@ form {
 
 #results_container {
   display: block;
-  position: absolute;
+}
+
+a {
+  background-color: white;
+  margin-top: 1em;
+  padding: 1em;
+  border-radius: 1em;
 }
 
 #dots_circle,
