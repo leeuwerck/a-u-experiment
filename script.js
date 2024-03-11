@@ -308,6 +308,17 @@ const leftTip = document.getElementById("left_tip")
 const rightTip = document.getElementById("right_tip")
 const leftCircleOfPair = document.getElementById("left_circle_choice")
 const rightCircleOfPair = document.getElementById("right_circle_choice")
+const choiceFeedback = document.getElementById("choice_feedback")
+
+function hideElement(element) {
+  element.style.display = "none"
+  element.style.visibility = "hidden"
+}
+
+function showElement(element, displayType) {
+  element.style.display = displayType
+  element.style.visibility = "visible"
+}
 
 if (isTrial) {
   document.getElementById("opacity_level_label").style.display = "block"
@@ -441,7 +452,7 @@ function startExperiment() {
   }
   if (document.getElementById("opacity_level_input").value != "") {
     const opacity = document.getElementById("opacity_level_input").value
-    colors = colors.map((color) => set(color, "rgb", color.rgb.replace("0.2", `0.${opacity}`)))
+    colors = colors.map((color) => set(color, "rgb", color.rgb.replace("0.2", opacity == 10 ? "1" : `0.${opacity}`)))
   }
 
   startNextStaircaseStep()
@@ -504,20 +515,15 @@ function chooseColor(color) {
   last(results).correctChoiceSide =
     last(results).higherCountColor === shuffledColorPair.left.colorName ? "left" : "right"
 
-  if (results.length < (isTrial ? 3 : STAIRCASE_STEP_COUNT)) {
+  if (results.length <= (isTrial ? 3 : STAIRCASE_STEP_COUNT)) {
     last(results).staircaseChosenColor = color
-    setTimeout(() => {
-      startNextStaircaseStep()
-    }, POST_CHOICE_DELAY)
-  } else if (results.length === (isTrial ? 3 : STAIRCASE_STEP_COUNT)) {
-    last(results).staircaseChosenColor = color
-    showContinueDialog()
+    tellIfAnswerCorrect()
   } else if (!last(results).firstGuessedColor) {
     last(results).firstGuessedColor = color
     setTimeout(() => {
       showConfidenceLikertScale()
     }, POST_CHOICE_DELAY)
-  } else if (results.filter((r) => r.firstGuessedColor).length === (isTrial ? 2 : EXPERIMENT_STEP_COUNT - 1)) {
+  } else if (results.filter((r) => r.firstGuessedColor).length === (isTrial ? 2 : EXPERIMENT_STEP_COUNT)) {
     last(results).secondGuessedColor = color
     showFinishDialog()
   } else {
@@ -526,6 +532,20 @@ function chooseColor(color) {
       startNextExperimentStep()
     }, POST_CHOICE_DELAY)
   }
+}
+
+function tellIfAnswerCorrect() {
+  choiceFeedback.innerHTML =
+    last(results).staircaseChosenColor === last(results).higherCountColor ? "Correct" : "Incorrect"
+  showElement(choiceFeedback, "block")
+  setTimeout(() => {
+    hideElement(choiceFeedback)
+    if (results.length < (isTrial ? 3 : STAIRCASE_STEP_COUNT)) {
+      startNextStaircaseStep()
+    } else if (results.length === (isTrial ? 3 : STAIRCASE_STEP_COUNT)) {
+      showContinueDialog()
+    }
+  }, POST_CHOICE_DELAY)
 }
 
 function rateConfidence() {
