@@ -1,13 +1,13 @@
 const { includes, get, last, random, repeat, sampleSize, set, shuffle, snakeCase, some } = _
 
-const RED = { colorName: "red", rgb: "rgb(255, 0, 0, 0.2)" }
-const BLUE = { colorName: "blue", rgb: "rgb(0, 0, 255, 0.2)" }
-const BRIGHT_GREEN = { colorName: "greenyellow", rgb: "rgb(0, 255, 0, 0.2)" }
-const YELLOW = { colorName: "yellow", rgb: "rgb(255, 255, 0, 0.2)" }
-const ORANGE = { colorName: "orange", rgb: "rgb(255, 165, 0, 0.2)" }
-const PURPLE = { colorName: "purple", rgb: "rgb(128, 0, 128, 0.2)" }
-const SKY_BLUE = { colorName: "skyblue", rgb: "rgb(135, 206, 235, 0.2)" }
-const GREY = { colorName: "grey", rgb: "rgb(128, 128, 128, 0.2)" }
+const RED = { colorName: "red", rgb: "rgb(255, 0, 0, 1.0)" }
+const BLUE = { colorName: "blue", rgb: "rgb(0, 0, 255, 1.0)" }
+const BRIGHT_GREEN = { colorName: "greenyellow", rgb: "rgb(0, 255, 0, 1.0)" }
+const YELLOW = { colorName: "yellow", rgb: "rgb(255, 255, 0, 1.0)" }
+const ORANGE = { colorName: "orange", rgb: "rgb(255, 165, 0, 1.0)" }
+const PURPLE = { colorName: "purple", rgb: "rgb(128, 0, 128, 1.0)" }
+const SKY_BLUE = { colorName: "skyblue", rgb: "rgb(135, 206, 235, 1.0)" }
+const GREY = { colorName: "grey", rgb: "rgb(128, 128, 128, 1.0)" }
 let colors = [RED, BLUE, BRIGHT_GREEN, YELLOW, ORANGE, PURPLE, SKY_BLUE, GREY]
 const shuffledAccuracyTips = shuffle([
   true,
