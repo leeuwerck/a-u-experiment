@@ -100,8 +100,8 @@ const DOT_OVERLAP_FACTOR = 3
 const SCREEN_CIRCLE_MARGIN = 30
 const CHOICE_DOT_RADIUS = 200
 const INITIAL_LOWER_COLOR_COUNT = 1 // :35
-const STAIRCASE_STEP_COUNT = 15 // 30
-const EXPERIMENT_STEP_COUNT = 40 // 80
+const STAIRCASE_STEP_COUNT = 30
+const EXPERIMENT_STEP_COUNT = 80
 
 const isTrial = includes(window.location.href.split("#"), "trial")
 const skipFirstPart = includes(window.location.href.split("#"), "skip_first_part")
@@ -536,7 +536,7 @@ function chooseColor(color) {
 
 function tellIfAnswerCorrect() {
   choiceFeedback.innerHTML =
-    last(results).staircaseChosenColor === last(results).higherCountColor ? "Correct" : "Incorrect"
+    last(results).staircaseChosenColor === last(results).higherCountColor ? "✅ Correct" : "❌ Incorrect"
   showElement(choiceFeedback, "block")
   setTimeout(() => {
     hideElement(choiceFeedback)
