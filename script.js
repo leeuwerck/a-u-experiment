@@ -1,14 +1,25 @@
 const { includes, get, last, random, repeat, sampleSize, set, shuffle, snakeCase, some } = _
 
-const RED = { colorName: "red", rgb: "rgb(255, 0, 0, 1.0)" }
-const BLUE = { colorName: "blue", rgb: "rgb(0, 0, 255, 1.0)" }
-const BRIGHT_GREEN = { colorName: "greenyellow", rgb: "rgb(0, 255, 0, 1.0)" }
-const YELLOW = { colorName: "yellow", rgb: "rgb(255, 255, 0, 1.0)" }
-const ORANGE = { colorName: "orange", rgb: "rgb(255, 165, 0, 1.0)" }
-const PURPLE = { colorName: "purple", rgb: "rgb(128, 0, 128, 1.0)" }
-const SKY_BLUE = { colorName: "skyblue", rgb: "rgb(135, 206, 235, 1.0)" }
-const GREY = { colorName: "grey", rgb: "rgb(128, 128, 128, 1.0)" }
-let colors = [RED, BLUE, BRIGHT_GREEN, YELLOW, ORANGE, PURPLE, SKY_BLUE, GREY]
+// const RED = { colorName: "red", rgb: "rgb(255, 0, 0, 1.0)" }
+// const BLUE = { colorName: "blue", rgb: "rgb(0, 0, 255, 1.0)" }
+// const BRIGHT_GREEN = { colorName: "greenyellow", rgb: "rgb(0, 255, 0, 1.0)" }
+// const YELLOW = { colorName: "yellow", rgb: "rgb(255, 255, 0, 1.0)" }
+// const ORANGE = { colorName: "orange", rgb: "rgb(255, 165, 0, 1.0)" }
+// const PURPLE = { colorName: "purple", rgb: "rgb(128, 0, 128, 1.0)" }
+// const SKY_BLUE = { colorName: "skyblue", rgb: "rgb(135, 206, 235, 1.0)" }
+// const GREY = { colorName: "grey", rgb: "rgb(128, 128, 128, 1.0)" }
+// let colors = [RED, BLUE, BRIGHT_GREEN, YELLOW, ORANGE, PURPLE, SKY_BLUE, GREY]
+
+const BLEU_FONCE = { colorName: "bleuFonce", rgb: "rgb(0, 0, 139)" }
+const TURQUOISE = { colorName: "turquoise", rgb: "rgb(64, 224, 208)" }
+const JAUNE = { colorName: "jaune", rgb: "rgb(255, 255, 0)" }
+const ROUGE_ECARLATE = { colorName: "rougeEcarlate", rgb: "rgb(220, 20, 60)" }
+const VERT_POMME = { colorName: "vertPomme", rgb: "rgb(102, 205, 0)" }
+const VIOLET = { colorName: "violet", rgb: "rgb(148, 0, 211)" }
+const ORANGE = { colorName: "orange", rgb: "rgb(255, 165, 0)" }
+const GRIS_FONCE = { colorName: "grisFonce", rgb: "rgb(64, 64, 64)" }
+
+let colors = [BLEU_FONCE, TURQUOISE, JAUNE, ROUGE_ECARLATE, VERT_POMME, VIOLET, ORANGE, GRIS_FONCE]
 const shuffledAccuracyTips = shuffle([
   true,
   true,
@@ -483,10 +494,16 @@ function showColorChoice(tipAccuracy, isTipCongruent) {
   colorChoices.style.visibility = "visible"
   if (tipAccuracy) {
     document.getElementById("tips").style.display = "flex"
-    last(results).firstGuessedColor === shuffledColorPair.left.colorName && isTipCongruent
-      ? highLightChoice("left")
-      : highLightChoice("right")
+    if (
+      (last(results).firstGuessedColor === shuffledColorPair.left.colorName && isTipCongruent) ||
+      (last(results).firstGuessedColor !== shuffledColorPair.left.colorName && !isTipCongruent)
+    ) {
+      highLightChoice("left")
+    } else {
+      highLightChoice("right")
+    }
   }
+
   listeningToLeftRightKeyboardChoice = true
 }
 
@@ -640,8 +657,11 @@ function displayResults() {
   document.getElementById("stimulus_container").style.display = "none"
 
   subjectId = document.getElementsByName("subject_id")[0].value || "missing_subject_id"
+  gender = document.querySelector('input[name="gender"]:checked').value || "missing_gender"
+  ageGroup = document.querySelector('input[name="age_group"]:checked').value || "missing_age_group"
+  age = document.getElementById("age").value
 
-  const responsesToDownload = formatResponses(subjectId)
+  const responsesToDownload = formatResponses(subjectId, gender, ageGroup, age)
 
   document.getElementById("responses").value = responsesToDownload
 
@@ -663,7 +683,7 @@ function displayResults() {
   }, 1000)
 }
 
-function formatResponses(subjectId) {
+function formatResponses(subjectId, gender, ageGroup, age) {
   const attributes = [
     "lowerColorCount",
     "lowerCountColor",
@@ -676,8 +696,10 @@ function formatResponses(subjectId) {
     "secondGuessedColor",
     "secondGuessConfidenceLevel",
   ]
-  return `${["subjectId", ...attributes].map(snakeCase).join(", ")}
-${results.map((line) => [subjectId, ...attributes.map((key) => get(line, key, ""))].join(", ")).join("\n")}`
+  return `${["subjectId", "gender", "ageGroup", "age", ...attributes].map(snakeCase).join(", ")}
+${results
+  .map((line) => [subjectId, gender, ageGroup, age, ...attributes.map((key) => get(line, key, ""))].join(", "))
+  .join("\n")}`
 }
 
 if (skipFirstPart) {

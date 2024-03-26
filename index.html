@@ -9,7 +9,8 @@
   <body>
     <dialog id="start_dialog" open>
       <form method="dialog" onsubmit="startExperiment()">
-        <label for="subject_id">Subject ID :</label>
+        <fieldset>
+          <legend for="subject_id">Subject ID</legend>
         <input
           type="text"
           id="subject_id"
@@ -18,6 +19,21 @@
           autofocus
           oninput="(() => { document.getElementById('start_button').disabled = !document.getElementById('subject_id').value;})()"
         />
+        </fieldset>
+        <fieldset>
+          <legend>Sexe</legend>
+          <input type="radio" name="gender" value="male" id="male" /><label for="male">Masculin</label><br />
+          <input type="radio" name="gender" value="female" id="female" /><label for="female">Féminin</label>
+        </fieldset>
+        <fieldset>
+          <legend>Groupe d'âge</legend>
+          <input type="radio" name="age_group" value="8_9" id="8_9" /><label for="8_9">8-9 ans</label><br />
+          <input type="radio" name="age_group" value="12_13" id="12_13" /><label for="12_13">12-13 ans</label>
+        </fieldset>
+        <fieldset>
+          <legend>Âge</legend>
+          <input type="number" step="0.1" id="age" name="age" />
+        </fieldset>
         <p>Commencer l’expérience&nbsp;?</p>
         <button id="start_button" disabled>Start</button>
       </form>

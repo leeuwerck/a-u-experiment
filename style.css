@@ -30,6 +30,11 @@ form {
   flex-direction: column;
   align-items: center;
 }
+form > fieldset {
+  max-width: 90%;
+  min-width: 90%;
+  margin-top: 5px;
+}
 
 #stimulus_container {
   aspect-ratio: 1/1;
