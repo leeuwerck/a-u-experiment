@@ -50,22 +50,22 @@ const shuffledAccuracyTips = shuffle([
   true,
   true,
   true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
-  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
   false,
   false,
   false,
@@ -320,13 +320,6 @@ function showElement(element, displayType) {
   element.style.visibility = "visible"
 }
 
-if (isTrial) {
-  document.getElementById("opacity_level_label").style.display = "block"
-  document.getElementById("opacity_level_label").style.visibility = "visible"
-  document.getElementById("opacity_level_input").style.display = "block"
-  document.getElementById("opacity_level_input").style.visibility = "visible"
-}
-
 const getRandomCoordinates = () => [random(0, SCREEN_SIZE), random(0, SCREEN_SIZE)]
 
 const getDistance = (x1, y1, x2, y2) => Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
@@ -450,10 +443,6 @@ function startExperiment() {
       elem.msRequestFullscreen()
     }
   }
-  if (document.getElementById("opacity_level_input").value != "") {
-    const opacity = document.getElementById("opacity_level_input").value
-    colors = colors.map((color) => set(color, "rgb", color.rgb.replace("0.2", opacity == 10 ? "1" : `0.${opacity}`)))
-  }
 
   startNextStaircaseStep()
 }
@@ -489,12 +478,12 @@ function showDotsCircle() {
   }, DOTS_CIRCLE_DISPLAY_DURATION)
 }
 
-function showColorChoice(tipAccuracy, isTipAccurate) {
+function showColorChoice(tipAccuracy, isTipCongruent) {
   colorChoices.style.display = "flex"
   colorChoices.style.visibility = "visible"
   if (tipAccuracy) {
     document.getElementById("tips").style.display = "flex"
-    last(results).higherCountColor === shuffledColorPair.left.colorName && isTipAccurate
+    last(results).firstGuessedColor === shuffledColorPair.left.colorName && isTipCongruent
       ? highLightChoice("left")
       : highLightChoice("right")
   }
@@ -523,13 +512,10 @@ function chooseColor(color) {
     setTimeout(() => {
       showConfidenceLikertScale()
     }, POST_CHOICE_DELAY)
-  } else if (results.filter((r) => r.firstGuessedColor).length === (isTrial ? 2 : EXPERIMENT_STEP_COUNT)) {
-    last(results).secondGuessedColor = color
-    showFinishDialog()
   } else {
     last(results).secondGuessedColor = color
     setTimeout(() => {
-      startNextExperimentStep()
+      showConfidenceLikertScale()
     }, POST_CHOICE_DELAY)
   }
 }
@@ -551,11 +537,19 @@ function tellIfAnswerCorrect() {
 function rateConfidence() {
   hideLikertScale()
   const level = document.querySelector('input[name="confidenceLevel"]:checked').value
-  last(results).confidenceLevel = level
+  if (!last(results).firstGuessConfidenceLevel) {
+    last(results).firstGuessConfidenceLevel = level
+  } else {
+    last(results).secondGuessConfidenceLevel = level
+  }
 
-  setTimeout(() => {
-    last(results).secondGuess ? startNextExperimentStep() : showTip()
-  }, POST_CHOICE_DELAY)
+  if (results.filter((r) => r.secondGuessedColor).length === (isTrial ? 2 : EXPERIMENT_STEP_COUNT)) {
+    showFinishDialog()
+  } else {
+    setTimeout(() => {
+      last(results).secondGuessedColor ? startNextExperimentStep() : showTip()
+    }, POST_CHOICE_DELAY)
+  }
 }
 
 function hideColorChoice() {
@@ -633,9 +627,9 @@ function showTip() {
   tipExplanation.style.display = "block"
   tipExplanation.style.visibility = "visible"
 
-  const isTipAccurate = shuffledAccuracyTips[results.filter(({ firstGuessedColor }) => firstGuessedColor).length - 1]
-  last(results).isTipAccurate = isTipAccurate
-  showColorChoice(true, isTipAccurate)
+  const isTipCongruent = shuffledAccuracyTips[results.filter(({ firstGuessedColor }) => firstGuessedColor).length - 1]
+  last(results).isTipCongruent = isTipCongruent
+  showColorChoice(true, isTipCongruent)
 }
 
 function displayResults() {
@@ -677,9 +671,10 @@ function formatResponses(subjectId) {
     "correctChoiceSide",
     "staircaseChosenColor",
     "firstGuessedColor",
-    "confidenceLevel",
-    "isTipAccurate",
+    "firstGuessConfidenceLevel",
+    "isTipCongruent",
     "secondGuessedColor",
+    "secondGuessConfidenceLevel",
   ]
   return `${["subjectId", ...attributes].map(snakeCase).join(", ")}
 ${results.map((line) => [subjectId, ...attributes.map((key) => get(line, key, ""))].join(", ")).join("\n")}`

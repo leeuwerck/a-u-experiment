@@ -130,8 +130,7 @@ a {
 #dots_circle,
 #color_choices,
 #results_container,
-#opacity_level_label,
-#opacity_level_input {
+#opacity_level_label {
   display: none;
   visibility: hidden;
 }
