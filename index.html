@@ -31,6 +31,23 @@
           <input type="radio" name="age_group" value="12_13" id="12_13" /><label for="12_13">12-13 ans</label>
         </fieldset>
         <fieldset>
+          <legend>Section</legend>
+          <input type="radio" name="section" value="primaire" id="primaire" /><label for="primaire">Primaire</label
+          ><br />
+          <input type="radio" name="section" value="secondaire" id="secondaire" /><label for="secondaire"
+            >Secondaire</label
+          >
+        </fieldset>
+        <fieldset>
+          <legend>Année d’études</legend>
+          <input type="radio" name="study_year" value="3_4_primaire" id="3_4_primaire" /><label for="3_4_primaire"
+            >3-4 primaire</label
+          ><br />
+          <input type="radio" name="study_year" value="1_2_secondaire" id="1_2_secondaire" /><label for="1_2_secondaire"
+            >1-2 secondaire</label
+          >
+        </fieldset>
+        <fieldset>
           <legend>Âge</legend>
           <input type="number" step="0.1" id="age" name="age" />
         </fieldset>
@@ -68,11 +85,14 @@
         ></svg>
       </div>
       <p id="choice_feedback">Correct</p>
-      <div id="tips">
-        <span id="left_tip">↑</span>
-        <span id="right_tip">↑</span>
+      <div id="reminders">
+        <span id="left_reminder">👇</span>
+        <span id="right_reminder">👇</span>
       </div>
-      <p id="tip_explanation">Ce conseil n’est peut-être pas vrai.</p>
+      <div id="tips">
+        <img src="detective.webp" id="left_tip" alt="d" />
+        <img src="detective.webp" id="right_tip" alt="d" />
+      </div>
       <span id="likert">
         <p>Pas sûr·e du tout</p>
         <fieldset>

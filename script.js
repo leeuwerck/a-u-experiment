@@ -314,9 +314,10 @@ let results = !skipFirstPart
 
 const dotsCircle = document.getElementById("dots_circle")
 const colorChoices = document.getElementById("color_choices")
-const tipExplanation = document.getElementById("tip_explanation")
 const leftTip = document.getElementById("left_tip")
 const rightTip = document.getElementById("right_tip")
+const leftReminder = document.getElementById("left_reminder")
+const rightReminder = document.getElementById("right_reminder")
 const leftCircleOfPair = document.getElementById("left_circle_choice")
 const rightCircleOfPair = document.getElementById("right_circle_choice")
 const choiceFeedback = document.getElementById("choice_feedback")
@@ -473,11 +474,14 @@ function startNextStaircaseStep() {
   shuffledColorPair = { left, right }
   drawCirclePair(shuffledColorPair)
 
+  last(results).displayStartTimestamp = window.performance.now()
+
   showDotsCircle()
 
   setTimeout(() => {
     showColorChoice()
-  }, DOTS_CIRCLE_DISPLAY_DURATION + 500)
+  }, DOTS_CIRCLE_DISPLAY_DURATION)
+  // }, DOTS_CIRCLE_DISPLAY_DURATION + 500)
 }
 
 function showDotsCircle() {
@@ -494,21 +498,31 @@ function showColorChoice(tipAccuracy, isTipCongruent) {
   colorChoices.style.visibility = "visible"
   if (tipAccuracy) {
     document.getElementById("tips").style.display = "flex"
+    document.getElementById("reminders").style.display = "flex"
     if (
       (last(results).firstGuessedColor === shuffledColorPair.left.colorName && isTipCongruent) ||
       (last(results).firstGuessedColor !== shuffledColorPair.left.colorName && !isTipCongruent)
     ) {
-      highLightChoice("left")
+      highlightChoice("left")
     } else {
-      highLightChoice("right")
+      highlightChoice("right")
+    }
+    if (last(results).firstGuessedColor === shuffledColorPair.left.colorName) {
+      remindFirstChoice("left")
+    } else {
+      remindFirstChoice("right")
     }
   }
 
   listeningToLeftRightKeyboardChoice = true
 }
 
-function highLightChoice(side) {
+function highlightChoice(side) {
   document.getElementById(`${side}_tip`).style.visibility = "visible"
+}
+
+function remindFirstChoice(side) {
+  document.getElementById(`${side}_reminder`).style.visibility = "visible"
 }
 
 function clickColor(element) {
@@ -523,14 +537,19 @@ function chooseColor(color) {
 
   if (results.length <= (isTrial ? 3 : STAIRCASE_STEP_COUNT)) {
     last(results).staircaseChosenColor = color
+    last(results).staircaseChoiceDelay = window.performance.now() - last(results).displayStartTimestamp
     tellIfAnswerCorrect()
   } else if (!last(results).firstGuessedColor) {
+    last(results).firstGuessDelay = window.performance.now() - last(results).displayStartTimestamp
     last(results).firstGuessedColor = color
+    last(results).isFirstGuessCorrect = last(results).higherCountColor === color
     setTimeout(() => {
       showConfidenceLikertScale()
     }, POST_CHOICE_DELAY)
   } else {
+    last(results).secondGuessDelay = window.performance.now() - last(results).displayStartTimestamp
     last(results).secondGuessedColor = color
+    last(results).isSecondGuessCorrect = last(results).higherCountColor === color
     setTimeout(() => {
       showConfidenceLikertScale()
     }, POST_CHOICE_DELAY)
@@ -572,10 +591,10 @@ function rateConfidence() {
 function hideColorChoice() {
   colorChoices.style.visibility = "hidden"
   colorChoices.style.display = "none"
-  tipExplanation.style.display = "none"
-  tipExplanation.style.visibility = "hidden"
   leftTip.style.visibility = "hidden"
   rightTip.style.visibility = "hidden"
+  leftReminder.style.visibility = "hidden"
+  rightReminder.style.visibility = "hidden"
 }
 
 function listeningToKeyboard() {
@@ -622,11 +641,15 @@ function startNextExperimentStep() {
   shuffledColorPair = { left, right }
 
   drawCirclePair(shuffledColorPair)
+
+  last(results).displayStartTimestamp = window.performance.now()
+
   showDotsCircle()
 
   setTimeout(() => {
     showColorChoice()
-  }, DOTS_CIRCLE_DISPLAY_DURATION + 1000)
+  }, DOTS_CIRCLE_DISPLAY_DURATION)
+  // }, DOTS_CIRCLE_DISPLAY_DURATION + 1000)
 }
 
 function showConfidenceLikertScale() {
@@ -641,9 +664,6 @@ function hideLikertScale() {
 }
 
 function showTip() {
-  tipExplanation.style.display = "block"
-  tipExplanation.style.visibility = "visible"
-
   const isTipCongruent = shuffledAccuracyTips[results.filter(({ firstGuessedColor }) => firstGuessedColor).length - 1]
   last(results).isTipCongruent = isTipCongruent
   showColorChoice(true, isTipCongruent)
@@ -656,10 +676,12 @@ function displayResults() {
 
   document.getElementById("stimulus_container").style.display = "none"
 
-  subjectId = document.getElementsByName("subject_id")[0].value || "missing_subject_id"
-  gender = document.querySelector('input[name="gender"]:checked').value || "missing_gender"
-  ageGroup = document.querySelector('input[name="age_group"]:checked').value || "missing_age_group"
-  age = document.getElementById("age").value
+  subjectId = document.getElementsByName("subject_id")[0]?.value || "missing_subject_id"
+  gender = document.querySelector('input[name="gender"]:checked')?.value || "missing_gender"
+  ageGroup = document.querySelector('input[name="age_group"]:checked')?.value || "missing_age_group"
+  section = document.querySelector('input[name="section"]:checked')?.value || "missing_section"
+  studyYear = document.querySelector('input[name="study_year"]:checked')?.value || "missing_study_year"
+  age = document.getElementById("age")?.value
 
   const responsesToDownload = formatResponses(subjectId, gender, ageGroup, age)
 
@@ -690,15 +712,22 @@ function formatResponses(subjectId, gender, ageGroup, age) {
     "higherCountColor",
     "correctChoiceSide",
     "staircaseChosenColor",
+    "staircaseChoiceDelay",
     "firstGuessedColor",
+    "firstGuessDelay",
     "firstGuessConfidenceLevel",
+    "isFirstGuessCorrect",
     "isTipCongruent",
     "secondGuessedColor",
+    "secondGuessDelay",
     "secondGuessConfidenceLevel",
+    "isSecondGuessCorrect",
   ]
-  return `${["subjectId", "gender", "ageGroup", "age", ...attributes].map(snakeCase).join(", ")}
+  return `${["subjectId", "gender", "ageGroup", "age", "section", "studyYear", ...attributes].map(snakeCase).join(", ")}
 ${results
-  .map((line) => [subjectId, gender, ageGroup, age, ...attributes.map((key) => get(line, key, ""))].join(", "))
+  .map((line) =>
+    [subjectId, gender, ageGroup, age, section, studyYear, ...attributes.map((key) => get(line, key, ""))].join(", ")
+  )
   .join("\n")}`
 }
 
@@ -706,3 +735,8 @@ if (skipFirstPart) {
   document.getElementById("start_dialog").style.display = "none"
   startNextExperimentStep()
 }
+
+// if (isTrial) {
+//   document.getElementById("start_dialog").style.display = "none"
+//   startExperiment()
+// }

@@ -45,7 +45,7 @@ form > fieldset {
   padding: 1vh;
 }
 
-#dots_circle {
+/* #dots_circle {
   opacity: 1;
   animation: fadeinout 1.5s linear forwards;
 }
@@ -70,7 +70,7 @@ form > fieldset {
   99% {
     opacity: 1;
   }
-}
+} */
 
 #color_choices {
   height: 100%;
@@ -79,21 +79,29 @@ form > fieldset {
   animation: var(--choice-animation);
 }
 
+#reminders,
 #tips {
   position: absolute;
   display: none;
   /* changed to flex in script */
-  & span {
+  & img {
     visibility: hidden;
-    font-size: 1.5em;
+    max-height: 20vh;
   }
   justify-content: space-around;
-  top: 62%;
+  top: 65%;
   width: var(--stimulus-container-size);
   animation: var(--choice-animation);
 }
 
-#tip_explanation,
+#reminders {
+  top: 31%;
+  & span {
+    visibility: hidden;
+    font-size: 2.5em;
+  }
+}
+
 #choice_feedback {
   display: none;
   visibility: hidden;
