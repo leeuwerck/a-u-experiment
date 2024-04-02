@@ -118,14 +118,21 @@ form > fieldset {
   filter: drop-shadow(4px 5px 5px black);
 }
 
+fieldset {
+  border-radius: 1vh;
+}
+
 #likert {
   display: none;
   width: fit-content;
   justify-content: space-around;
   & fieldset {
     display: flex;
-    margin-inline-start: 1em;
-    margin-inline-end: 1em;
+    margin-inline-start: 1.5em;
+    margin-inline-end: 1.5em;
+  }
+  & p {
+    transform: scale(2);
   }
 }
 

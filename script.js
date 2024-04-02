@@ -14,12 +14,12 @@ const BLEU_FONCE = { colorName: "bleuFonce", rgb: "rgb(0, 0, 139)" }
 const TURQUOISE = { colorName: "turquoise", rgb: "rgb(64, 224, 208)" }
 const JAUNE = { colorName: "jaune", rgb: "rgb(255, 255, 0)" }
 const ROUGE_ECARLATE = { colorName: "rougeEcarlate", rgb: "rgb(220, 20, 60)" }
-const VERT_POMME = { colorName: "vertPomme", rgb: "rgb(102, 205, 0)" }
+const NOIR = { colorName: "noir", rgb: "rgb(0, 0, 0)" }
 const VIOLET = { colorName: "violet", rgb: "rgb(148, 0, 211)" }
-const ORANGE = { colorName: "orange", rgb: "rgb(255, 165, 0)" }
-const GRIS_FONCE = { colorName: "grisFonce", rgb: "rgb(64, 64, 64)" }
+const ORANGE_BRULE = { colorName: "orangeBrule", rgb: "rgb(255, 140, 0)" }
+const GRIS_ARDOISE = { colorName: "grisArdoise", rgb: "rgb(112, 128, 144)" }
 
-let colors = [BLEU_FONCE, TURQUOISE, JAUNE, ROUGE_ECARLATE, VERT_POMME, VIOLET, ORANGE, GRIS_FONCE]
+let colors = [BLEU_FONCE, TURQUOISE, JAUNE, ROUGE_ECARLATE, NOIR, VIOLET, ORANGE_BRULE, GRIS_ARDOISE]
 const shuffledAccuracyTips = shuffle([
   true,
   true,
